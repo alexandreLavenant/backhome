@@ -28,15 +28,18 @@ let config = require('config'),
     },
     stopMusic = function()
     {
-      return connection.Player.GetActivePlayers()
-      .then(function(players)
+      return kodi(kodiConf.host, kodiConf.port).then(function(connection)
       {
-    		/* Stop everything thats playing */
-    		return Promise.all(players.map(function(player)
+        return connection.Player.GetActivePlayers()
+        .then(function(players)
         {
-    			return connection.Player.Stop(player.playerid);
-    		}));
-  	 });
+      		/* Stop everything thats playing */
+      		return Promise.all(players.map(function(player)
+          {
+      			return connection.Player.Stop(player.playerid);
+      		}));
+    	 });
+     });
     }
     ;
 
