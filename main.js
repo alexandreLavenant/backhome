@@ -61,7 +61,7 @@ dash.on("detected", () =>
           })
           .catch(function(error)
           {
-            console.error(error);
+            console.error('Kodi : ' + error);
           });
         }
         else

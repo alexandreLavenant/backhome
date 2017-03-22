@@ -11,6 +11,7 @@
   "dependencies": {
     "config": "^1.25.1",
     "hs100-api": "^0.3.0",
+    "kodi-ws": "^2.4.3",
     "node-dash-button": "^0.6.1"
   }
 }
