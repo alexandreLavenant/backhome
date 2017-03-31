@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Back Home</title>
+    <style media="screen">
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+      }
+
+      .switch input {display:none;}
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      input:checked + .slider {
+        background-color: #2196F3;
+      }
+
+      input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+      }
+
+      input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 34px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 15px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        color: #fff;
+        background-color: #4CAF50;
+        border: none;
+        border-radius: 15px;
+        margin-top: 10px;
+      }
+
+      .button:hover {background-color: #3e8e41}
+
+      .button:active {
+        background-color: #3e8e41;
+        transform: translateY(4px);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+
+      <h1>Back Home</h1>
+
+      <h2>Configuration</h2>
+      <form class="form" action="/" method="post">
+
+        <div class="play_music">
+          <h3>Play Music</h3>
+          Off
+          <label class="switch">
+            <input id="enable" type="checkbox" name="enable">
+            <div class="slider round">
+            </div>
+          </label>
+          On
+        </div>
+
+        <div class="music_id">
+          <h3>Which Music ?</h3>
+          <label>Video ID</label>
+          <input id="videoID" type="text" name="video" value="">
+          <button id="playNow" type="button" class="button" style="background-color: #4286F4;">Play now</button>
+        </div>
+
+        <button type="submit" class="button">Save</button>
+      </form>
+    </div>
+    <script type="text/javascript">
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET', '/config');
+      xhr.send(null);
+      xhr.onreadystatechange = function ()
+      {
+        if(xhr.status === 200)
+        {
+          let res = JSON.parse(xhr.responseText);
+          res.enable ? document.getElementById('enable').checked = 'checked' : null;
+          document.getElementById('videoID').value = res.video;
+        }
+      }
+
+      document.getElementById('playNow').addEventListener('click', function()
+      {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', '/playnow?video=' + document.getElementById('videoID').value);
+        xhr.send(null);
+      })
+    </script>
+  </body>
+</html>

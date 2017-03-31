@@ -9,7 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.17.1",
     "config": "^1.25.1",
+    "express": "^4.15.2",
     "hs100-api": "^0.3.0",
     "kodi-ws": "^2.4.3",
     "node-dash-button": "^0.6.1"

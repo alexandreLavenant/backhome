@@ -1,6 +1,11 @@
 'use strict';
 
 let config = require('config'),
+    // Http server
+    express = require('express'),
+    bodyParser = require('body-parser'),
+    app = express(),
+    port = config.get('http.port'),
     // Dash button Setup
     dash_button = require('node-dash-button'),
     dash = dash_button(config.get('dash.mac'), null, null, 'all'),
@@ -11,9 +16,11 @@ let config = require('config'),
     // Kodi Setup
     kodi = require('kodi-ws'),
     kodiConf = config.get('kodi'),
-    playMusic = function()
+    videoId = kodiConf.video,
+    canPlayMusic = kodiConf.enable,
+    playMusic = function(musicId)
     {
-      let url = 'plugin:\/\/plugin.video.youtube\/?path=\/root\/search&action=play_video&videoid=' + kodiConf.video;
+      let url = 'plugin:\/\/plugin.video.youtube\/?path=\/root\/search&action=play_video&videoid=' + musicId;
       return kodi(kodiConf.host, kodiConf.port).then(function(connection)
       {
         /* Start the video */
@@ -67,15 +74,22 @@ dash.on("detected", () =>
         else
         {
           console.log('Smart Plug : switch on');
-          playMusic()
-          .then(function()
+          if (canPlayMusic)
           {
-            console.log('Kodi : Playing Music');
-          })
-          .catch(function(error)
+            playMusic(videoId)
+            .then(function()
+            {
+              console.log('Kodi : Playing Music');
+            })
+            .catch(function(error)
+            {
+              console.error('Kodi : ' + error);
+            });
+          }
+          else
           {
-            console.error('Kodi : ' + error);
-          });
+            console.log('Kodi : Not Playing Music');
+          }
         }
       })
       .catch(function(error)
@@ -84,5 +98,43 @@ dash.on("detected", () =>
       })
       ;
 });
-
 console.log('Back Home Ready');
+
+app
+.use(bodyParser.json())
+.use(bodyParser.urlencoded({ extended: true}))
+.get('/', function(req, res)
+{
+  res.sendFile(__dirname + '/index.html');
+})
+.post('/', function(req, res)
+{
+  videoId = req.body.video;
+  if(req.body.enable !== 'undefined')
+  {
+    canPlayMusic = req.body.enable;
+  }
+  res.redirect('/');
+})
+.get('/config', function(req, res)
+{
+  res.json(
+  {
+    enable : canPlayMusic,
+    video : videoId
+  });
+})
+.get('/playnow', function(req, res)
+{
+  playMusic(req.query.video)
+  .then(function()
+  {
+    console.log('Kodi : Playing Music UI');
+  });
+})
+;
+
+app.listen(port, function()
+{
+  console.log(`Server listening ${port}`);
+});
