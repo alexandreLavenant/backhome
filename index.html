@@ -105,9 +105,14 @@
 
         <div class="music_id">
           <h3>Which Music ?</h3>
-          <label>Video ID</label>
-          <input id="videoID" type="text" name="video" value="">
-          <button id="playNow" type="button" class="button" style="background-color: #4286F4;">Play now</button>
+          <label>Youtube ID</label>
+          <input id="musicMorningId" type="text" name="musicMorningId" value="">
+          <button id="playMorningNow" type="button" class="button" style="background-color: #4286F4;">Play morning music</button>
+        </div>
+        <div class="music_id">
+          <label>Youtube ID</label>
+          <input id="musicEveningId" type="text" name="musicEveningId" value="">
+          <button id="playEveningNow" type="button" class="button" style="background-color: #4286F4;">Play evening music</button>
         </div>
 
         <button type="submit" class="button">Save</button>
@@ -123,16 +128,25 @@
         {
           let res = JSON.parse(xhr.responseText);
           res.enable ? document.getElementById('enable').checked = 'checked' : null;
-          document.getElementById('videoID').value = res.video;
+          document.getElementById('musicMorningId').value = res.musicMorningId;
+          document.getElementById('musicEveningId').value = res.musicEveningId;
         }
       }
 
-      document.getElementById('playNow').addEventListener('click', function()
+      document.getElementById('playMorningNow').addEventListener('click', function()
       {
         let xhr = new XMLHttpRequest();
-        xhr.open('GET', '/playnow?video=' + document.getElementById('videoID').value);
+        xhr.open('GET', '/playnow?music=' + document.getElementById('musicMorningId').value);
         xhr.send(null);
-      })
+      });
+
+      document.getElementById('playEveningNow').addEventListener('click', function()
+      {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', '/playnow?music=' + document.getElementById('musicEveningId').value);
+        xhr.send(null);
+      });
+
     </script>
   </body>
 </html>

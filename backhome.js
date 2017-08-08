@@ -16,7 +16,8 @@ let config = require('config'),
     // Kodi Setup
     kodi = require('kodi-ws'),
     kodiConf = config.get('kodi'),
-    videoId = kodiConf.video,
+    musicMorningId = kodiConf.music.morning,
+    musicEveningId = kodiConf.music.evening,
     canPlayMusic = kodiConf.enable,
     playMusic = function(musicId)
     {
@@ -76,7 +77,15 @@ dash.on("detected", () =>
           console.log('Smart Plug : switch on');
           if (canPlayMusic)
           {
-            playMusic(videoId)
+            var d = new Date(),
+                n = new Date(),
+                musicId = musicMorningId
+                ;
+
+            d.setHours(12, 0, 0, 0);
+            (n>d) && (musicId = musicEveningId);
+
+            playMusic(musicId)
             .then(function()
             {
               console.log('Kodi : Playing Music');
@@ -109,7 +118,8 @@ app
 })
 .post('/', function(req, res)
 {
-  videoId = req.body.video;
+  musicMorningId = req.body.musicMorningId;
+  musicEveningId = req.body.musicEveningId;
   if(req.body.enable !== 'undefined')
   {
     canPlayMusic = req.body.enable;
@@ -121,12 +131,13 @@ app
   res.json(
   {
     enable : canPlayMusic,
-    video : videoId
+    musicMorningId : musicMorningId,
+    musicEveningId : musicEveningId
   });
 })
 .get('/playnow', function(req, res)
 {
-  playMusic(req.query.video)
+  playMusic(req.query.music)
   .then(function()
   {
     console.log('Kodi : Playing Music UI');
