@@ -6,6 +6,10 @@ let config = require('config'),
     bodyParser = require('body-parser'),
     app = express(),
     port = config.get('http.port'),
+    // Authentification Require
+    crypto = require('crypto'),
+    passport = require('passport'),
+    LocalStrategy = require('passport-local').Strategy,
     // Dash button Setup
     dash_button = require('node-dash-button'),
     dash = dash_button(config.get('dash.mac'), null, null, 'all'),
@@ -88,7 +92,7 @@ dash.on("detected", () =>
             playMusic(musicId)
             .then(function()
             {
-              console.log('Kodi : Playing Music');
+              console.log('Kodi : Playing Music ' + (n>d ? 'Evening' : 'Morning'));
             })
             .catch(function(error)
             {
@@ -109,9 +113,39 @@ dash.on("detected", () =>
 });
 console.log('Back Home Ready');
 
+
+passport.use(new LocalStrategy(
+  function(username, password, done)
+  {
+
+    var userApp = config.get('http.user'),
+        passApp = config.get('http.password')
+        ;
+
+    if (userApp !== crypto.createHash('sha256').update(username).digest('base64') || 
+        passApp !== crypto.createHash('sha256').update(password).digest('base64')
+    )
+    {
+      return done(null, false, { message: 'Incorrect username or password' });
+    }
+
+    return done(null, {});
+  }
+));
+
 app
 .use(bodyParser.json())
 .use(bodyParser.urlencoded({ extended: true}))
+.use(passport.initialize())
+.get('/login', function(req, res)
+{
+  res.sendFile(__dirname + '/login.html');
+})
+.post('/login', passport.authenticate('local',
+{
+  successRedirect: '/',
+  failureRedirect: '/login'
+}))
 .get('/', function(req, res)
 {
   res.sendFile(__dirname + '/index.html');
