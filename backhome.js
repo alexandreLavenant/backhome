@@ -1,6 +1,7 @@
 'use strict';
 
 let config = require('config'),
+    path = require('path'),
     // Http server
     express = require('express'),
     bodyParser = require('body-parser'),
@@ -134,6 +135,7 @@ passport.use(new LocalStrategy(
 ));
 
 app
+.use('/static', express.static(path.join(__dirname, 'public')))
 .use(bodyParser.json())
 .use(bodyParser.urlencoded({ extended: true}))
 .use(passport.initialize())
