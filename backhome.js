@@ -11,6 +11,7 @@ let config = require('config'),
     crypto = require('crypto'),
     passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
+    cookieSession = require('cookie-session'),
     // Dash button Setup
     dash_button = require('node-dash-button'),
     dash = dash_button(config.get('dash.mac'), null, null, 'all'),
@@ -57,6 +58,8 @@ let config = require('config'),
     ;
 
 // Main application
+
+// Dash Button
 dash.on("detected", () =>
 {
   console.log('Dash Button : pressed');
@@ -120,7 +123,8 @@ passport.use(new LocalStrategy(
   {
 
     var userApp = config.get('http.user'),
-        passApp = config.get('http.password')
+        passApp = config.get('http.password'),
+        userId
         ;
 
     if (userApp !== crypto.createHash('sha256').update(username).digest('base64') || 
@@ -130,15 +134,28 @@ passport.use(new LocalStrategy(
       return done(null, false, { message: 'Incorrect username or password' });
     }
 
-    return done(null, {});
+    return done(null, { id : config.get('http.id') });
   }
 ));
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
 
 app
 .use('/static', express.static(path.join(__dirname, 'public')))
 .use(bodyParser.json())
 .use(bodyParser.urlencoded({ extended: true}))
+.use(cookieSession({
+  name: 'session',
+  keys: config.get('http.cookieKeys')
+}))
 .use(passport.initialize())
+.use(passport.session())
 .get('/login', function(req, res)
 {
   res.sendFile(__dirname + '/login.html');
@@ -150,29 +167,47 @@ app
 }))
 .get('/', function(req, res)
 {
+  if(!req.isAuthenticated()){
+    res.redirect('/login');
+  }
+
   res.sendFile(__dirname + '/index.html');
 })
 .post('/', function(req, res)
 {
+  if(!req.isAuthenticated()){
+    res.redirect('/login');
+  }
+
   musicMorningId = req.body.musicMorningId;
   musicEveningId = req.body.musicEveningId;
+
   if(req.body.enable !== 'undefined')
   {
-    canPlayMusic = req.body.enable;
+    canPlayMusic = req.body.enable === 'on' ? true : false;
   }
+
   res.redirect('/');
 })
 .get('/config', function(req, res)
 {
-  res.json(
-  {
+  if(!req.isAuthenticated()){
+    res.redirect('/login');
+  }
+
+  res.json({
     enable : canPlayMusic,
     musicMorningId : musicMorningId,
     musicEveningId : musicEveningId
   });
+
 })
 .get('/playnow', function(req, res)
 {
+  if(!req.isAuthenticated()){
+    res.redirect('/login');
+  }
+
   playMusic(req.query.music)
   .then(function()
   {
