@@ -1,0 +1,40 @@
+include ./head.pug
+
+link(rel="stylesheet" href="/static/css/config.css")
+
+.container
+	.row
+		.col-xl-12.col-lg-12.col-md-12
+		
+			br
+		
+			form(action="/" method="post")
+				.form-check
+					h3 Activate Music
+						#toggles
+							input(type="checkbox" name="enable" id="checkbox1" class="ios-toggle" checked=enable)
+							label(for="checkbox1" class="checkbox-label" data-off="off" data-on="on")
+
+				h3 Which Music ?
+				each music in musicMorning
+					.input-group
+							span(class="input-group-addon") Morning
+							input(class="form-control" type="text" name="musicMorning[]" placeholder="Youtube ID" value=music)
+							span(class="input-group-btn")
+								button(class="btn btn-primary playNow" type="button") Play
+
+				br
+
+				each music in musicEvening
+					.input-group
+							span(class="input-group-addon") Evening
+							input(class="form-control" type="text" name="musicEvening[]" placeholder="Youtube ID" value=music)
+							span(class="input-group-btn")
+								button(type="button" class="btn btn-primary playNow") Play
+				
+				br
+				
+				button(type="submit" class="btn btn-success") Save
+
+include ./footer.pug
+script(src="/static/js/config.js")

@@ -1,0 +1,13 @@
+include ./head.pug
+link(rel="stylesheet" href="/static/css/signin.css")4
+
+.container
+	form(class="form-signin" action="/login" method="post")
+		h2(class="form-signin-heading") Please sign in
+		label(for="inputUsername" class="sr-only") Username
+		input(type="text" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus="" name="username")
+		label(for="inputPassword" class="sr-only") Password
+		input(type="password" id="inputPassword" class="form-control" placeholder="Password" required="" name="password")
+		button(class="btn btn-lg btn-primary btn-block" type="submit") Sign in
+
+include ./footer.pug
