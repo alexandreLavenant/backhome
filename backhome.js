@@ -13,7 +13,7 @@ let config = require('config'),
     httpsOptions = {
       key: fs.readFileSync('./ssl/backhome_privkey.pem'),
       cert: fs.readFileSync('./ssl/backhome_certificate.pem')
-    }
+    },
     helmet = require('helmet'),
     // Authentification Require
     crypto = require('crypto'),
