@@ -2,11 +2,19 @@
 
 let config = require('config'),
     path = require('path'),
+    fs = require('fs'),
     // Http server
     express = require('express'),
     bodyParser = require('body-parser'),
     app = express(),
     port = config.get('http.port'),
+    // Security
+    https = require('https'),
+    httpsOptions = {
+      key: fs.readFileSync('./ssl/backhome_privkey.pem'),
+      cert: fs.readFileSync('./ssl/backhome_certificate.pem')
+    }
+    helmet = require('helmet'),
     // Authentification Require
     crypto = require('crypto'),
     passport = require('passport'),
@@ -147,6 +155,7 @@ passport.deserializeUser(function(user, done) {
 });
 
 app
+.use(helmet())
 .use('/static', express.static(path.join(__dirname, 'public')))
 .use(bodyParser.json())
 .use(bodyParser.urlencoded({ extended: true}))
@@ -216,7 +225,8 @@ app
 })
 ;
 
-app.listen(port, function()
+var server = https.createServer(httpsOptions, app);
+server.listen(port, function()
 {
   console.log(`Server listening ${port}`);
 });
