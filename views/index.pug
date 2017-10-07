@@ -17,24 +17,39 @@ link(rel="stylesheet" href="/static/css/config.css")
 
 				h3 Which Music ?
 				each music in musicMorning
-					.input-group
+					.input-group(style="margin-top : 5px;")
 							span(class="input-group-addon") Morning
 							input(class="form-control" type="text" name="musicMorning[]" placeholder="Youtube ID" value=music)
 							span(class="input-group-btn")
 								button(class="btn btn-primary playNow" type="button") Play
-
+							span(class="input-group-btn" style="margin-left : 5px;")
+								button(class="btn btn-danger removeMusic" type="button") -
+				
+				br
+				
+				button(class="btn btn-success float-right addMusic" type="button") Music Morning +
+				
+				br
 				br
 
 				each music in musicEvening
-					.input-group
+					.input-group(style="margin-top : 5px;")
 							span(class="input-group-addon") Evening
 							input(class="form-control" type="text" name="musicEvening[]" placeholder="Youtube ID" value=music)
 							span(class="input-group-btn")
 								button(type="button" class="btn btn-primary playNow") Play
+							span(class="input-group-btn" style="margin-left : 5px;")
+								button(class="btn btn-danger removeMusic" type="button") -
 				
 				br
 				
-				button(type="submit" class="btn btn-success") Save
+				button(class="btn btn-success float-right addMusic" type="button") Music Evening +
+				
+				br
+				br
+				br
+				
+				button(type="submit" class="btn btn-danger float-right") Save
 
 include ./footer.pug
 script(src="/static/js/config.js")

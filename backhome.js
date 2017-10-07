@@ -66,7 +66,8 @@ let config = require('config'),
 	;
 
 // Main application
-Dash Button
+
+// Dash Button
 dash.on("detected", () =>
 {
 	console.log('Dash Button : pressed');
@@ -200,8 +201,8 @@ app
 		res.redirect('/login');
 	}
 
-	musicMorning = req.body.musicMorning;
-	musicEvening = req.body.musicEvening;
+	musicMorning = req.body.musicMorning.filter(Boolean);
+	musicEvening = req.body.musicEvening.filter(Boolean);
 
 	if(req.body.enable !== 'undefined')
 	{
