@@ -2,6 +2,7 @@ var cacheVersion = 1,
 	cacheName = 'backhome.cache.v' + cacheVersion,
 	staticUrl = '/static/'
 	cacheList = [
+		'/',
 		staticUrl + 'manifest.json',
 		// staticUrl + 'js/loadSW.js',
 		// staticUrl + 'sw.js',
@@ -15,7 +16,7 @@ var cacheVersion = 1,
 	]
 	;
 
-this.addEventListener('install', function(event)
+self.addEventListener('install', function(event)
 {
 	event.waitUntil(
 		caches.open(cacheName)
@@ -27,7 +28,7 @@ this.addEventListener('install', function(event)
 	);
 });
 
-this.addEventListener('activate', function(event) {
+self.addEventListener('activate', function(event) {
 	// Active worker won't be treated as activated until promise resolves successfully.
 	event.waitUntil(
 		caches.keys()
@@ -47,7 +48,7 @@ this.addEventListener('activate', function(event) {
 	);
 });
 
-this.addEventListener('fetch', function(event)
+self.addEventListener('fetch', function(event)
 {
 	console.log('Handling fetch event for', event.request.url);
 	event.respondWith(
