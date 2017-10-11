@@ -224,10 +224,14 @@ app
 		console.log('Kodi : Playing Music UI');
 	});
 })
+.get('/sw', function(req, res)
+{
+	res.sendFile(path.join(__dirname, 'sw.js'));
+})
 ;
 
-var server = https.createServer(httpsOptions, app);
-server.listen(port, function()
+var httpsServer = https.createServer(httpsOptions, app);
+httpsServer.listen(port, function()
 {
 	console.log(`Server listening ${port}`);
 });
