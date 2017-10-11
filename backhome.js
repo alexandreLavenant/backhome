@@ -11,8 +11,8 @@ let config = require('config'),
 	// Security
 	https = require('https'),
 	httpsOptions = {
-		// key: fs.readFileSync('./ssl/backhome_privkey.pem'),
-		// cert: fs.readFileSync('./ssl/backhome_certificate.pem')
+		key: fs.readFileSync('./ssl/backhome_privkey.pem'),
+		cert: fs.readFileSync('./ssl/backhome_certificate.pem')
 	},
 	helmet = require('helmet'),
 	// Authentification Require
@@ -21,8 +21,8 @@ let config = require('config'),
 	LocalStrategy = require('passport-local').Strategy,
 	cookieSession = require('cookie-session'),
 	// Dash button Setup
-	// dash_button = require('node-dash-button'),
-	// dash = dash_button(config.get('dash.mac'), null, null, 'all'),
+	dash_button = require('node-dash-button'),
+	dash = dash_button(config.get('dash.mac'), null, null, 'all'),
 	// Plug Setup
 	plugApi = require('hs100-api'),
 	plugClient = new plugApi.Client(),
@@ -68,62 +68,62 @@ let config = require('config'),
 // Main application
 
 // Dash Button
-// dash.on("detected", () =>
-// {
-// 	console.log('Dash Button : pressed');
-//
-// 	plug.getPowerState()
-// 	.then((state) =>
-// 	{
-// 		plug.setPowerState(!state);
-// 		if(state)
-// 		{
-// 			console.log('Smart Plug : switch off');
-// 			stopMusic()
-// 			.then(function()
-// 			{
-// 				console.log('Kodi : Stop all players');
-// 			})
-// 			.catch(function(error)
-// 			{
-// 				console.error('Kodi : ' + error);
-// 			});
-// 		}
-// 		else
-// 		{
-// 			console.log('Smart Plug : switch on');
-// 			if (canPlayMusic)
-// 			{
-// 				let d = new Date(),
-// 					n = new Date(),
-// 					musics = musicMorning
-// 					;
-//
-// 				d.setHours(12, 0, 0, 0);
-// 				(n>d) && (musics = musicEvening);
-//
-// 				playMusic(musics[Math.floor(Math.random() * (musics.length))])
-// 				.then(function()
-// 				{
-// 					console.log('Kodi : Playing Music ' + (n>d ? 'Evening' : 'Morning'));
-// 				})
-// 				.catch(function(error)
-// 				{
-// 					console.error('Kodi : ' + error);
-// 				});
-// 			}
-// 			else
-// 			{
-// 				console.log('Kodi : Not Playing Music');
-// 			}
-// 		}
-// 	})
-// 	.catch(function(error)
-// 	{
-// 		console.error('Smart Plug : ' + error);
-// 	})
-// 	;
-// });
+dash.on("detected", () =>
+{
+	console.log('Dash Button : pressed');
+
+	plug.getPowerState()
+	.then((state) =>
+	{
+		plug.setPowerState(!state);
+		if(state)
+		{
+			console.log('Smart Plug : switch off');
+			stopMusic()
+			.then(function()
+			{
+				console.log('Kodi : Stop all players');
+			})
+			.catch(function(error)
+			{
+				console.error('Kodi : ' + error);
+			});
+		}
+		else
+		{
+			console.log('Smart Plug : switch on');
+			if (canPlayMusic)
+			{
+				let d = new Date(),
+					n = new Date(),
+					musics = musicMorning
+					;
+
+				d.setHours(12, 0, 0, 0);
+				(n>d) && (musics = musicEvening);
+
+				playMusic(musics[Math.floor(Math.random() * (musics.length))])
+				.then(function()
+				{
+					console.log('Kodi : Playing Music ' + (n>d ? 'Evening' : 'Morning'));
+				})
+				.catch(function(error)
+				{
+					console.error('Kodi : ' + error);
+				});
+			}
+			else
+			{
+				console.log('Kodi : Not Playing Music');
+			}
+		}
+	})
+	.catch(function(error)
+	{
+		console.error('Smart Plug : ' + error);
+	})
+	;
+});
 
 console.log('Back Home Ready');
 
@@ -224,10 +224,14 @@ app
 		console.log('Kodi : Playing Music UI');
 	});
 })
+.get('/sw', function(req, res)
+{
+	res.sendFile(path.join(__dirname, 'sw.js'));
+})
 ;
 
-// var server = https.createServer(httpsOptions, app);
-app.listen(port, function()
+var httpsServer = https.createServer(httpsOptions, app);
+httpsServer.listen(port, function()
 {
 	console.log(`Server listening ${port}`);
 });

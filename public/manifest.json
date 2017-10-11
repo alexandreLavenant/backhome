@@ -1,7 +1,7 @@
 {
 	"name": "Back Home",
 	"short_name": "backhome",
-	"start_url": ".",
+	"start_url": "/",
 	"display": "standalone",
 	"background_color": "#f1f1f1",
 	"theme_color": "#212529",

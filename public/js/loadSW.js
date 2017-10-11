@@ -1,6 +1,6 @@
 if('serviceWorker' in navigator)
 {
-	navigator.serviceWorker.register('/static/sw.js', { scope: '/static/' })
+	navigator.serviceWorker.register('/sw')
 	.then(function(reg)
 	{
 		// registration worked
