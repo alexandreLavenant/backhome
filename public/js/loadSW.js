@@ -1,14 +1,40 @@
-if('serviceWorker' in navigator)
+(function($)
 {
-	navigator.serviceWorker.register('/sw')
-	.then(function(reg)
+	let showAlert = function(message, description, level)
 	{
-		// registration worked
-		console.log('Registration succeeded. Scope is ' + reg.scope);
-	})
-	.catch(function(error)
+		$('#statusMessage').remove();
+
+		let $alert = $('<div id="statusMessage" class="alert alert-' + level + ' alert-dismissible fade show" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>' + message + '</strong>' + description + '</div>');
+
+		$alert
+			.insertBefore('.container')
+			;
+
+	};
+
+	if('serviceWorker' in navigator)
 	{
-		// registration failed
-		console.log('Registration failed with ' + error);
+		navigator.serviceWorker.register('/sw')
+		.then(function(reg)
+		{
+			// registration worked
+			console.log('Registration succeeded. Scope is ' + reg.scope);
+		})
+		.catch(function(error)
+		{
+			// registration failed
+			console.log('Registration failed with ' + error);
+		});
+	}
+
+	window.addEventListener('offline', function()
+	{
+		showAlert('You are now offline !', 'Bu you can continue to use this app', 'warning');
 	});
-}
+
+	window.addEventListener('online', function()
+	{
+		showAlert('You are now online !', '', 'success');
+	});
+
+}(jQuery));
