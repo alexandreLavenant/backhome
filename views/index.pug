@@ -1,55 +1,62 @@
 include ./head.pug
 
-link(rel="stylesheet" href="/static/css/config.css")
-
 .container
 	.row
-		.col-xl-12.col-lg-12.col-md-12
-
-			br
-		
+		.col.s12.m12.l12.xl12
 			form(action="/saveMusic" method="post")
-				.form-check
-					h3 Activate Music
-						#toggles
-							input(type="checkbox" name="enable" id="checkbox1" class="ios-toggle" checked=enable)
-							label(for="checkbox1" class="checkbox-label" data-off="off" data-on="on")
+				row
+					.col.s12
+						h2 Activate Music
+						.switch
+							label
+								| Off
+								input(type="checkbox" checked=enable)
+								span.lever
+								| On
 
-				h3 Which Music ?
-				each music in musicMorning
-					.input-group(style="margin-top : 5px;")
-							span(class="input-group-addon") Morning
-							input(class="form-control" type="text" name="musicMorning[]" placeholder="Youtube ID" value=music)
-							span(class="input-group-btn")
-								button(class="btn btn-primary playNow" type="button") Play
-							span(class="input-group-btn" style="margin-left : 5px;")
-								button(class="btn btn-danger removeMusic" type="button") -
+				row
+					.col.s12
+						h2 Which Music ?
+						h3 Morning
+						each music in musicMorning
+							row
+								.input-field.col.s8
+									input(id="musicMorning" class="icon_prefix" type="text" name="musicMorning[]" value=music)
+									label(for="musicMorning") Youtube ID
+								.col.s2
+									a(class="btn-floating waves-effect waves-light red removeMusic" style="margin-right : 5px;")
+										i(class="material-icons") delete
+									a(class="btn-floating waves-effect waves-light green playNow")
+										i(class="material-icons") play_arrow
+						
+						row
+							.col.s1.offset-s8
+								a(class="btn-floating btn-large blue addMusic" type="button")
+									i(class="material-icons") add
 				
-				br
+				row
+					.col.s12
+						h3 Evening
+						each music in musicEvening
+							row
+								.input-field.col.s8
+									input(id="musicEvening"  type="text" name="musicEvening[]" value=music)
+									label(for="musicEvening") Youtube ID
+								.col.s2
+									a(class="btn-floating waves-effect waves-light red removeMusic" style="margin-right : 5px;")
+										i(class="material-icons") delete
+									a(class="btn-floating waves-effect waves-light green playNow")
+										i(class="material-icons") play_arrow
+						
+						row
+							.col.s1.offset-s8
+								a(class="btn-floating btn-large blue addMusic" type="button")
+									i(class="material-icons") add
 				
-				button(class="btn btn-success float-right addMusic" type="button") Music Morning +
-				
-				br
-				br
-
-				each music in musicEvening
-					.input-group(style="margin-top : 5px;")
-							span(class="input-group-addon") Evening
-							input(class="form-control" type="text" name="musicEvening[]" placeholder="Youtube ID" value=music)
-							span(class="input-group-btn")
-								button(type="button" class="btn btn-primary playNow") Play
-							span(class="input-group-btn" style="margin-left : 5px;")
-								button(class="btn btn-danger removeMusic" type="button") -
-				
-				br
-				
-				button(class="btn btn-success float-right addMusic" type="button") Music Evening +
-				
-				br
-				br
-				br
-				
-				button(id="saveMusic" type="button" class="btn btn-danger float-right") Save
+				row
+					.col.s2.offset-s8
+						a(id="saveMusic" class="btn-large waves-effect waves-light" style="margin-top : 40px;")
+							i(class="material-icons right") send
 
 include ./footer.pug
 script(src="/static/js/config.js")
