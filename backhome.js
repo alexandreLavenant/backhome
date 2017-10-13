@@ -67,7 +67,7 @@ let config = require('config'),
 
 // Main application
 
-Dash Button
+// Dash Button
 dash.on("detected", () =>
 {
 	console.log('Dash Button : pressed');
