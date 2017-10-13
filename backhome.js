@@ -194,7 +194,7 @@ app
 		musicEvening : musicEvening
 	});
 })
-.post('/', function(req, res)
+.post('/saveMusic', function(req, res)
 {
 	if(!req.isAuthenticated())
 	{
@@ -206,10 +206,10 @@ app
 
 	if(req.body.enable !== 'undefined')
 	{
-		canPlayMusic = req.body.enable === 'on' ? true : false;
+		canPlayMusic = req.body.enable;
 	}
 
-	res.redirect('/');
+	res.end();
 })
 .get('/play', function(req, res)
 {

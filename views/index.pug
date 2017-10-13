@@ -8,7 +8,7 @@ link(rel="stylesheet" href="/static/css/config.css")
 
 			br
 		
-			form(action="/" method="post")
+			form(id='formMusic' action="/" method="post")
 				.form-check
 					h3 Activate Music
 						#toggles
@@ -49,7 +49,7 @@ link(rel="stylesheet" href="/static/css/config.css")
 				br
 				br
 				
-				button(type="submit" class="btn btn-danger float-right") Save
+				button(id="saveMusic" type="button" class="btn btn-danger float-right") Save
 
 include ./footer.pug
 script(src="/static/js/config.js")

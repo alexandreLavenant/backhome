@@ -15,6 +15,7 @@ var cacheVersion = 1,
 		staticUrl + 'css/config.css',
 		staticUrl + 'css/signin.css',
 		staticUrl + 'js/config.js',
+		staticUrl + 'js/loadSW.js'
 	]
 	lastRequest = null,
 	handlePostResponse = function(req)
@@ -25,7 +26,7 @@ var cacheVersion = 1,
 		}
 
 		lastRequest = req;
-		return new Response(null, { status : 202 }).clone();
+		return new Response(null, { status : 200 }).clone();
 	}
 	;
 
@@ -65,7 +66,7 @@ self.addEventListener('fetch', function(event)
 {
 	console.log('Handling fetch event for', event.request.url);
 
-	if(/^(?:http|https):\/\/.+:3000\/$/.test(event.request.url) && event.request.method === 'POST')
+	if(/^(?:http|https):\/\/.+:3000\/saveMusic$/.test(event.request.url) && event.request.method === 'POST')
 	{
 		return handlePostResponse(event.request);
 	}
@@ -117,8 +118,16 @@ self.addEventListener('message', function(message)
 		return fetch(lastRequest)
 		.then((response) =>
 		{
-			lastRequest = null;
-			return response;
+			return caches.open(cacheName)
+			.then(function(cache)
+			{
+				return cache.delete('/')
+				.then(() =>
+				{
+					lastRequest = null;
+					return response;
+				});
+			});
 		});
 	}
 });
