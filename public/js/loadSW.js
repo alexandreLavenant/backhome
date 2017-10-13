@@ -19,6 +19,7 @@
 		{
 			// registration worked
 			console.log('Registration succeeded. Scope is ' + reg.scope);
+
 		})
 		.catch(function(error)
 		{
@@ -30,11 +31,18 @@
 	window.addEventListener('offline', function()
 	{
 		showAlert('You are now offline ! ', 'But you can continue to use this app', 'warning');
+		if(navigator.serviceWorker.controller)
+		{
+			navigator.serviceWorker.controller.postMessage({ 'type' : 'network', 'status' : false });
+		}
 	});
 
 	window.addEventListener('online', function()
 	{
 		showAlert('You are now online !', '', 'success');
+		if(navigator.serviceWorker.controller)
+		{
+			navigator.serviceWorker.controller.postMessage({ 'type' : 'network', 'status' : true });
+		}
 	});
-
 }(jQuery));

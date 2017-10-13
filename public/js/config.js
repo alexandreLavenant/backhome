@@ -20,4 +20,33 @@
 		xhr.send(null);
 	});
 
+	$(document).on('click', '#saveMusic', function(e)
+	{
+		e.preventDefault();
+
+		let musicMorning = [],
+			musicEvening = [],
+			enable = $('input[name="enable"]').prop('checked')
+			;
+
+		$('input[name="musicMorning[]"]').each(function()
+		{
+			musicMorning.push($(this).val());
+		});
+
+		$('input[name="musicEvening[]"]').each(function()
+		{
+			musicEvening.push($(this).val());
+		});
+
+		let xhr = new XMLHttpRequest();
+		xhr.open('POST', '/saveMusic', true);
+		xhr.setRequestHeader("Content-Type", "application/json");
+		xhr.send(JSON.stringify({
+			musicMorning : musicMorning,
+			musicEvening : musicEvening,
+			enable : enable
+		}));
+	});
+
 }(jQuery));

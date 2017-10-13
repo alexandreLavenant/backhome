@@ -15,7 +15,19 @@ var cacheVersion = 1,
 		staticUrl + 'css/config.css',
 		staticUrl + 'css/signin.css',
 		staticUrl + 'js/config.js',
+		staticUrl + 'js/loadSW.js'
 	]
+	lastRequest = null,
+	handlePostResponse = function(req)
+	{
+		if(navigator.onLine)
+		{
+			return fetch(req);
+		}
+
+		lastRequest = req;
+		return new Response(null, { status : 200 }).clone();
+	}
 	;
 
 self.addEventListener('install', function(event)
@@ -53,6 +65,12 @@ self.addEventListener('activate', function(event) {
 self.addEventListener('fetch', function(event)
 {
 	console.log('Handling fetch event for', event.request.url);
+
+	if(/^(?:http|https):\/\/.+:3000\/saveMusic$/.test(event.request.url) && event.request.method === 'POST')
+	{
+		return handlePostResponse(event.request);
+	}
+
 	event.respondWith(
 		caches.open(cacheName)
 		.then(function(cache)
@@ -67,7 +85,7 @@ self.addEventListener('fetch', function(event)
 				}
 
 				return fetch(event.request)
-				.then(function (response)
+				.then(function(response)
 				{
 					// response may be used only once
 					// we need to save clone to put one copy in cache
@@ -91,4 +109,25 @@ self.addEventListener('fetch', function(event)
 			})
 		})
 	);
+});
+
+self.addEventListener('message', function(message)
+{
+	if(message.data.type === 'network' && message.data.status === true && lastRequest !== null)
+	{
+		return fetch(lastRequest)
+		.then((response) =>
+		{
+			return caches.open(cacheName)
+			.then(function(cache)
+			{
+				return cache.delete('/')
+				.then(() =>
+				{
+					lastRequest = null;
+					return response;
+				});
+			});
+		});
+	}
 });
