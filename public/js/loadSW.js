@@ -29,7 +29,7 @@
 
 	window.addEventListener('offline', function()
 	{
-		showAlert('You are now offline !', 'Bu you can continue to use this app', 'warning');
+		showAlert('You are now offline ! ', 'But you can continue to use this app', 'warning');
 	});
 
 	window.addEventListener('online', function()
