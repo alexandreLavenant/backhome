@@ -40,7 +40,7 @@ include ./head.pug
 						each music in musicEvening
 							.row
 								.input-field.col.s8
-									input(id="musicEvening"  type="text" name="musicEvening[]" value=music)
+									input(id="musicEvening"  class="icon_prefix" type="text" name="musicEvening[]" value=music)
 									label(for="musicEvening") Youtube ID
 								.col.s2
 									a(class="btn-floating waves-effect waves-light red removeMusic" style="margin-right : 5px;")

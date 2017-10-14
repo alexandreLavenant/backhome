@@ -16,7 +16,7 @@
 	$(document).on('click', '.playNow', function(e)
 	{
 		let xhr = new XMLHttpRequest();
-		xhr.open('GET', '/play?music=' + $(e.target).parent().parent().prev().find('#musicMorning').val());
+		xhr.open('GET', '/play?music=' + $(e.target).parent().parent().prev().find('.icon_prefix').val());
 		xhr.send(null);
 		if(navigator.onLine)
 		{
