@@ -18,6 +18,14 @@
 		let xhr = new XMLHttpRequest();
 		xhr.open('GET', '/play?music=' + $(e.target).parent().parent().prev().find('#musicMorning').val());
 		xhr.send(null);
+		if(navigator.onLine)
+		{
+			Materialize.toast('Play music now', 5e3);
+		}
+		else
+		{
+			Materialize.toast('Offline mode does not support this feature', 5e3);
+		}
 	});
 
 	$(document).on('click', '#saveMusic', function(e)
