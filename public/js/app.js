@@ -15,12 +15,19 @@
 
 	$(document).on('click', '.playNow', function(e)
 	{
-		let xhr = new XMLHttpRequest();
-		xhr.open('GET', '/play?music=' + $(e.target).parent().parent().prev().find('.icon_prefix').val());
-		xhr.send(null);
 		if(navigator.onLine)
 		{
-			Materialize.toast('Play music now', 5e3);
+			let music = $(e.target).parent().parent().prev().find('.icon_prefix').val();
+			if ($(e.target).parent().parent().prev().find('.icon_prefix').val() !== "") {
+				let xhr = new XMLHttpRequest();
+				xhr.open('GET', '/play?music=' + music);
+				xhr.send(null);
+				Materialize.toast('Playing music now !', 5e3);
+			}
+			else
+			{
+				Materialize.toast('No music to play !', 5e3);
+			}
 		}
 		else
 		{
