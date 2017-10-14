@@ -5,15 +5,20 @@ html(lan="eng")
 		meta(name="viewport" content="width=device-width, user-scalable=no")
 		meta(name="theme-color" content="#212529")
 		title Back Home - #{active} 
-		link(rel="icon" type="image/png" href="/static/favicon.png")
 		link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css")
 		link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
+		link(rel="application/font-woff2" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/fonts/roboto/Roboto-Regular.woff2")
+		link(rel="application/font-woff2" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/fonts/roboto/Roboto-Light.woff2")
+		link(rel="application/font-woff" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/fonts/roboto/Roboto-Light.woff")
+		link(rel="icon" type="image/png" href="/static/favicon.png")
 		link(rel="manifest" href="/static/manifest.json")
 	body
-		nav
+		nav(class="deep-purple darken-1")
 			.nav-wrapper
-				a(href="/" class="brand-logo") Logo
-				ul(id="nav-mobile" class="right hide-on-med-and-down")
+				a(href="/" class="brand-logo")
+					i(class="material-icons") home
+					
+				ul(class="right hide-on-med-and-down")
 					li
 						a(href="/")
 							i(class="material-icons") build

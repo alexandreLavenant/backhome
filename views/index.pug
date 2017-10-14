@@ -4,22 +4,22 @@ include ./head.pug
 	.row
 		.col.s12.m12.l12.xl12
 			form(action="/saveMusic" method="post")
-				row
+				.row
 					.col.s12
 						h2 Activate Music
 						.switch
 							label
 								| Off
-								input(type="checkbox" checked=enable)
+								input(type="checkbox" name="enable" checked=enable)
 								span.lever
 								| On
 
-				row
+				.row
 					.col.s12
 						h2 Which Music ?
 						h3 Morning
 						each music in musicMorning
-							row
+							.row
 								.input-field.col.s8
 									input(id="musicMorning" class="icon_prefix" type="text" name="musicMorning[]" value=music)
 									label(for="musicMorning") Youtube ID
@@ -29,16 +29,16 @@ include ./head.pug
 									a(class="btn-floating waves-effect waves-light green playNow")
 										i(class="material-icons") play_arrow
 						
-						row
+						.row
 							.col.s1.offset-s8
 								a(class="btn-floating btn-large blue addMusic" type="button")
 									i(class="material-icons") add
 				
-				row
+				.row
 					.col.s12
 						h3 Evening
 						each music in musicEvening
-							row
+							.row
 								.input-field.col.s8
 									input(id="musicEvening"  type="text" name="musicEvening[]" value=music)
 									label(for="musicEvening") Youtube ID
@@ -48,16 +48,15 @@ include ./head.pug
 									a(class="btn-floating waves-effect waves-light green playNow")
 										i(class="material-icons") play_arrow
 						
-						row
+						.row
 							.col.s1.offset-s8
 								a(class="btn-floating btn-large blue addMusic" type="button")
 									i(class="material-icons") add
 				
-				row
+				.row
 					.col.s2.offset-s8
-						a(id="saveMusic" class="btn-large waves-effect waves-light" style="margin-top : 40px;")
+						button(id="saveMusic" class="btn-large waves-effect waves-light" style="margin-top : 40px;")
 							i(class="material-icons right") send
 
 include ./footer.pug
-script(src="/static/js/config.js")
-script(src="/static/js/loadSW.js")
+script(src="/static/js/app.js")
