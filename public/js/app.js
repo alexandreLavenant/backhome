@@ -59,7 +59,6 @@
 		xhr.setRequestHeader("Content-Type", "application/json");
 		xhr.onreadystatechange = function()
 		{
-			console.log(this);
 		};
 		xhr.send(JSON.stringify({
 			musicMorning : musicMorning,

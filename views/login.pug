@@ -1,22 +1,23 @@
 include ./head.pug
-
-.container
-	.row
-		h2 Please sign in
-		form(class="col s12" action="/login" method="post")
-			.row
-				.input-field.col.s12
-					i(class="material-icons prefix") account_circle
-					input(id="inputUsername" class="validate" type="text" required="" name="username")
-					label(for="inputUsername") Username
-			.row
-				.input-field.col.s12
-					i(class="material-icons prefix") lock
-					input(id="inputPassword" class="validate" type="password" placeholder="Password" required="" name="password")
-					label(for="inputPassword") Password
-			.row
-				.col.s2.offset-s10
-					button(class="btn btn-large waves-effect waves-light" type="submit")
-						i(class="material-icons right") send
+main
+	.container
+		.row
+			h2 Please sign in
+			form(class="col s12" action="/login" method="post")
+				.row
+					.input-field.col.s12
+						i(class="material-icons prefix") account_circle
+						input(id="inputUsername" class="validate" type="text" required="" name="username")
+						label(for="inputUsername") Username
+				.row
+					.input-field.col.s12
+						i(class="material-icons prefix") lock
+						input(id="inputPassword" class="validate" type="password" placeholder="Password" required="" name="password")
+						label(for="inputPassword") Password
+				.row
+					.col.s4.offset-s8
+						button(class="btn btn-large waves-effect waves-light" type="submit")
+							i(class="material-icons right") send
+							| Sign In
 
 include ./footer.pug
