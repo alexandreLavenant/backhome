@@ -1,6 +1,8 @@
 
 (function($)
 {
+	$(".button-collapse").sideNav();
+
 	$(document).on('click', '.addMusic', function(e)
 	{
 		let $html = $('<div class="row"><div class="input-field col s8"><input class="icon_prefix" id="musicMorning" type="text" name="musicMorning[]" value=""><label for="musicMorning" class="active">Youtube ID</label></div><div class="col s2"><a class="btn-floating waves-effect waves-light red removeMusic" style="margin-right : 5px;"><i class="material-icons">delete</i></a><a class="btn-floating waves-effect waves-light green playNow"><i class="material-icons">play_arrow</i></a></div></div>');
