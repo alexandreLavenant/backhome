@@ -35,7 +35,13 @@ let config = require('config'),
 	canPlayMusic = kodiConf.enable,
 	playMusic = function(musicId)
 	{
-		let url = 'plugin:\/\/plugin.video.youtube\/?path=\/root\/search&action=play_video&videoid=' + musicId;
+		let youtubeRegex = /^.+youtube.com\/watch\?v=(.+)&.+$/;
+
+		if(youtubeRegex.test(musicId))
+		{
+			musicId = musicId.match(youtubeRegex)[1];
+		}
+
 		return kodi(kodiConf.host, kodiConf.port).then(function(connection)
 		{
 			/* Start the video */
@@ -43,7 +49,7 @@ let config = require('config'),
 			{
 				item :
 				{
-					file : url
+					file : 'plugin:\/\/plugin.video.youtube\/?path=\/root\/search&action=play_video&videoid=' + musicId
 				}
 			});
 		});
