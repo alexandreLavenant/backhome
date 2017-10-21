@@ -22,8 +22,8 @@ main
 							each music in musicMorning
 								.row
 									.input-field.col.s8
-										input(id="musicMorning" class="icon_prefix" type="text" name="musicMorning[]" value=music)
-										label(for="musicMorning") Youtube ID
+										input(class="icon_prefix" type="text" name="musicMorning[]" value=music)
+										label Youtube ID
 									.col.s2
 										a(class="btn-floating waves-effect waves-light red removeMusic" style="margin-right : 5px;")
 											i(class="material-icons") delete
@@ -33,7 +33,7 @@ main
 							.row
 								.col.s1.offset-s8
 									a(class="btn-floating btn-large blue addMusic" type="button")
-										i(class="material-icons") add
+										i(data-add="musicMorning" class="material-icons") add
 					
 					.row
 						.col.s12
@@ -41,8 +41,8 @@ main
 							each music in musicEvening
 								.row
 									.input-field.col.s8
-										input(id="musicEvening"  class="icon_prefix" type="text" name="musicEvening[]" value=music)
-										label(for="musicEvening") Youtube ID
+										input(class="icon_prefix" type="text" name="musicEvening[]" value=music)
+										label Youtube ID
 									.col.s2
 										a(class="btn-floating waves-effect waves-light red removeMusic" style="margin-right : 5px;")
 											i(class="material-icons") delete
@@ -52,7 +52,7 @@ main
 							.row
 								.col.s1.offset-s8
 									a(class="btn-floating btn-large blue addMusic" type="button")
-										i(class="material-icons") add
+										i(data-add="musicEvening"  class="material-icons") add
 					
 					.row
 						.col.s4.offset-s8
