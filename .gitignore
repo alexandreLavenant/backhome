@@ -1,3 +1,4 @@
 node_modules
-config/
-ssl/
+config
+ssl
+public/js
