@@ -7,12 +7,12 @@ let config = require('config'),
 	express = require('express'),
 	bodyParser = require('body-parser'),
 	app = express(),
-	port = config.get('http.port'),
+	port = config.get('server.port'),
 	// Security
 	https = require('https'),
 	httpsOptions = {
-		key: fs.readFileSync('./ssl/backhome_privkey.pem'),
-		cert: fs.readFileSync('./ssl/backhome_certificate.pem')
+		key: fs.readFileSync('./config/ssl/backhome_privkey.pem'),
+		cert: fs.readFileSync('./config/ssl/backhome_certificate.pem')
 	},
 	helmet = require('helmet'),
 	// Authentification Require
@@ -26,48 +26,53 @@ let config = require('config'),
 	// Plug Setup
 	plugApi = require('hs100-api'),
 	plugClient = new plugApi.Client(),
-	plug = plugClient.getPlug(config.get('plug')),
+	plug = plugClient.getPlug(config.get('switch.host')),
 	// Kodi Setup
 	kodi = require('kodi-ws'),
 	kodiConf = config.get('kodi'),
-	musicMorning = kodiConf.music.morning,
-	musicEvening = kodiConf.music.evening,
-	canPlayMusic = kodiConf.enable,
+	// App Setup
+	appConfFile = './config/app.json',
+	appConf = JSON.parse(fs.readFileSync(appConfFile)),
+	musicMorning = appConf.music.morning,
+	musicEvening = appConf.music.evening,
+	canPlayMusic = appConf.enable,
 	playMusic = function(musicId)
 	{
-		let youtubeRegex = /^.+youtube.com\/watch\?v=(.+)&.+$/;
+		let youtubeRegex = /^https:\/\/www.youtube.com\/watch\?v=(.+)&?.+$/;
 
 		if(youtubeRegex.test(musicId))
 		{
 			musicId = musicId.match(youtubeRegex)[1];
 		}
 
-		return kodi(kodiConf.host, kodiConf.port).then(function(connection)
-		{
-			/* Start the video */
-			return connection.Player.Open(
+		return kodi(kodiConf.host, kodiConf.port)
+			.then(function(connection)
 			{
-				item :
+				/* Start the video */
+				return connection.Player.Open(
 				{
-					file : 'plugin:\/\/plugin.video.youtube\/?path=\/root\/search&action=play_video&videoid=' + musicId
-				}
+					item :
+					{
+						file : 'plugin:\/\/plugin.video.youtube\/?path=\/root\/search&action=play_video&videoid=' + musicId
+					}
+				});
 			});
-		});
 	},
 	stopMusic = function()
 	{
-		return kodi(kodiConf.host, kodiConf.port).then(function(connection)
-		{
-			return connection.Player.GetActivePlayers()
-			.then(function(players)
+		return kodi(kodiConf.host, kodiConf.port)
+			.then(function(connection)
 			{
-				/* Stop everything thats playing */
-				return Promise.all(players.map(function(player)
+				return connection.Player.GetActivePlayers()
+				.then(function(players)
 				{
-					return connection.Player.Stop(player.playerid);
-				}));
+					/* Stop everything thats playing */
+					return Promise.all(players.map(function(player)
+					{
+						return connection.Player.Stop(player.playerid);
+					}));
+				});
 			});
-		});
 	}
 	;
 
@@ -137,8 +142,8 @@ passport.use(new LocalStrategy(
 	function(username, password, done)
 	{
 
-		var userApp = config.get('http.user'),
-			passApp = config.get('http.password'),
+		var userApp = config.get('server.user.username'),
+			passApp = config.get('server.user.password'),
 			userId
 			;
 
@@ -149,7 +154,7 @@ passport.use(new LocalStrategy(
 		  return done(null, false, { message: 'Incorrect username or password' });
 		}
 
-		return done(null, { id : config.get('http.id') });
+		return done(null, { id : config.get('server.user.id') });
 	}
 ));
 
@@ -171,7 +176,7 @@ app
 .use(cookieSession(
 {
 	name: 'session',
-	keys: config.get('http.cookieKeys')
+	keys: config.get('server.auth.cookieKeys')
 }))
 .use(passport.initialize())
 .use(passport.session())
@@ -214,6 +219,8 @@ app
 	{
 		canPlayMusic = req.body.enable;
 	}
+
+	fs.writeFileSync(appConfFile, JSON.stringify(appConf));
 
 	res.end();
 })
