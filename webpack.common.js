@@ -1,13 +1,20 @@
 const path = require('path');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const outputPath = 'public/js';
+const publicPath = '/static/js/';
 
 module.exports =
 {
-    entry : './src/js/app.js',
+    entry :
+    {
+        'main' : ['./src/js/main.js'],
+        'app'  : ['./src/js/app.js']
+    },
     output :
     {
-        filename : 'app.js',
-        path : path.resolve(__dirname, 'public/js')
+        filename : '[name].js',
+        path : path.resolve(__dirname, outputPath),
+        publicPath : publicPath
     },
     module :
     {
@@ -32,6 +39,6 @@ module.exports =
     },
     plugins :
     [
-        new UglifyJSPlugin()
-    ]
+        new CleanWebpackPlugin([outputPath])
+    ]   
 };

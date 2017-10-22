@@ -1,8 +1,3 @@
-
-import $ from "jquery";
-import "materialize-css/dist/js/materialize.js";
-import "materialize-css/dist/css/materialize.css";
-
 $(".button-collapse").sideNav();
 
 $(document).on('click', '.addMusic', function(e)

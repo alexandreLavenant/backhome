@@ -9,7 +9,8 @@ var cacheVersion = 1,
 		staticUrl + 'img/backhome512.png',
 		staticUrl + 'manifest.json',
 		'https://fonts.googleapis.com/icon?family=Material+Icons',
-		staticUrl + 'js/app.js',
+		staticUrl + 'js/main.js',
+		staticUrl + 'js/app.js'
 	]
 	lastRequest = null,
 	handlePostResponse = function(req)
