@@ -1,36 +1,62 @@
 README
 
-Get the best news of hackernews.com.
+Simple ui to play some music when backhome (using dash button, kodi and iot switch).
 
 I. Get the repository
 --------------------
 ```
-git clone https://github.com/alexandreLavenant/hackerNews.git
+git clone https://github.com/alexandreLavenant/backhome.git
 ```
 II. Installation
 ---------------
-```js
+```
 yarn install
-npm run build
+yarn build
 ```
 III. Configuration
 ---------------
-```
+```js
 {
-    "http" : {
-        "port" : 2212,
-        "id" : "",
-        "user" : "",
-        "password" : "",
-        "cookieKeys" : ["", "", ""]
+    "server" :
+    {
+        "port" : 3000,
+        "auth" :
+        {
+            "cookieKeys" : ["", "", ""]
+        },
+        "user" :
+        {
+            "id" : "",
+            "username" : "",
+            "password" : ""
+        }
     },
-    "plug" : "192.168.1.2",
-    "kodi" : {
-        "http" : "192.168.1.3",
-        "port" : 8080,
-        "music" : {
-            "morning" : ["", ""],
-            "evening" : [""]
+    "dash" :
+    {
+        "mac" : ""
+    },
+    "switch" :
+    {
+        "host" : "192.168.1.2"
+    },
+    "kodi" :
+    {
+        "host" : "192.168.1.3",
+        "port" : 8080
+    },
+    "app" :
+    {
+        "music" :
+        {
+            "morning" :
+            [
+                "edezd",
+                "fezfz"
+            ],
+            "evening" :
+            [
+                "fzdzedz"
+            ]
         },
         "enable" : true
     }
@@ -38,6 +64,6 @@ III. Configuration
 ```
 IV. Run Program
 ---------------
-```js
-node backhome.js
+```
+yarn start
 ```
