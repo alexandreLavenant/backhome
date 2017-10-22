@@ -7,7 +7,7 @@ let config = require('config'),
 	express = require('express'),
 	bodyParser = require('body-parser'),
 	app = express(),
-	port = config.get('http.port'),
+	port = config.get('server.port'),
 	// Security
 	https = require('https'),
 	httpsOptions = {
