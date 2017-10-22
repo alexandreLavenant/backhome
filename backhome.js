@@ -33,12 +33,9 @@ let config = require('config'),
 	// App Setup
 	appConfFile = './config/app.json',
 	appConf = JSON.parse(fs.readFileSync(appConfFile)),
-	musicMorning = appConf.music.morning,
-	musicEvening = appConf.music.evening,
-	canPlayMusic = appConf.enable,
 	playMusic = function(musicId)
 	{
-		let youtubeRegex = /^https:\/\/www.youtube.com\/watch\?v=(.+)&?.+$/;
+		let youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i;
 
 		if(youtubeRegex.test(musicId))
 		{
@@ -103,15 +100,15 @@ dash.on("detected", () =>
 		else
 		{
 			console.log('Smart Plug : switch on');
-			if (canPlayMusic)
+			if (appConf.enable)
 			{
 				let d = new Date(),
 					n = new Date(),
-					musics = musicMorning
+					musics = appConf.music.morning
 					;
 
 				d.setHours(12, 0, 0, 0);
-				(n>d) && (musics = musicEvening);
+				(n>d) && (musics = appConf.music.evening);
 
 				playMusic(musics[Math.floor(Math.random() * (musics.length))])
 				.then(function()
@@ -200,9 +197,9 @@ app
 	res.render('index',
 	{
 		active : 'Configuration',
-		enable : canPlayMusic,
-		musicMorning : musicMorning,
-		musicEvening : musicEvening
+		enable : appConf.enable,
+		musicMorning : appConf.music.morning,
+		musicEvening : appConf.music.evening
 	});
 })
 .post('/saveMusic', function(req, res)
@@ -212,12 +209,12 @@ app
 		res.redirect('/login');
 	}
 
-	musicMorning = req.body.musicMorning.filter(Boolean);
-	musicEvening = req.body.musicEvening.filter(Boolean);
+	appConf.music.morning = req.body.musicMorning.filter(Boolean);
+	appConf.music.evening = req.body.musicEvening.filter(Boolean);
 
 	if(req.body.enable !== 'undefined')
 	{
-		canPlayMusic = req.body.enable;
+		appConf.enable = req.body.enable;
 	}
 
 	fs.writeFileSync(appConfFile, JSON.stringify(appConf));
