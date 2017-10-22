@@ -15,6 +15,7 @@ yarn build
 ```
 III. Configuration
 ---------------
+default.json
 ```js
 {
     "server" :
@@ -43,24 +44,24 @@ III. Configuration
     {
         "host" : "192.168.1.3",
         "port" : 8080
-    },
-    "app" :
-    {
-        "music" :
-        {
-            "morning" :
-            [
-                "edezd",
-                "fezfz"
-            ],
-            "evening" :
-            [
-                "fzdzedz"
-            ]
-        },
-        "enable" : true
     }
 }
+```
+app.json
+```js
+"music" :
+{
+	"morning" :
+	[
+		"edezd",
+		"fezfz"
+	],
+	"evening" :
+	[
+		"fzdzedz"
+	]
+},
+"enable" : true
 ```
 IV. Run Program
 ---------------

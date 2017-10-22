@@ -11,8 +11,8 @@ let config = require('config'),
 	// Security
 	https = require('https'),
 	httpsOptions = {
-		// key: fs.readFileSync('./config/ssl/backhome_privkey.pem'),
-		// cert: fs.readFileSync('./config/ssl/backhome_certificate.pem')
+		key: fs.readFileSync('./config/ssl/backhome_privkey.pem'),
+		cert: fs.readFileSync('./config/ssl/backhome_certificate.pem')
 	},
 	helmet = require('helmet'),
 	// Authentification Require
@@ -21,8 +21,8 @@ let config = require('config'),
 	LocalStrategy = require('passport-local').Strategy,
 	cookieSession = require('cookie-session'),
 	// Dash button Setup
-	// dash_button = require('node-dash-button'),
-	// dash = dash_button(config.get('dash.mac'), null, null, 'all'),
+	dash_button = require('node-dash-button'),
+	dash = dash_button(config.get('dash.mac'), null, null, 'all'),
 	// Plug Setup
 	plugApi = require('hs100-api'),
 	plugClient = new plugApi.Client(),
@@ -31,7 +31,8 @@ let config = require('config'),
 	kodi = require('kodi-ws'),
 	kodiConf = config.get('kodi'),
 	// App Setup
-	appConf = config.get('app'),
+	appConfFile = './config/app.json',
+	appConf = JSON.parse(fs.readFileSync(appConfFile)),
 	musicMorning = appConf.music.morning,
 	musicEvening = appConf.music.evening,
 	canPlayMusic = appConf.enable,
@@ -78,63 +79,63 @@ let config = require('config'),
 // Main application
 
 // Dash Button
-// dash.on("detected", () =>
-// {
-// 	console.log('Dash Button : pressed');
+dash.on("detected", () =>
+{
+	console.log('Dash Button : pressed');
 
-// 	plug.getPowerState()
-// 	.then((state) =>
-// 	{
-// 		plug.setPowerState(!state);
-// 		if(state)
-// 		{
-// 			console.log('Smart Plug : switch off');
-// 			stopMusic()
-// 			.then(function()
-// 			{
-// 				console.log('Kodi : Stop all players');
-// 			})
-// 			.catch(function(error)
-// 			{
-// 				console.error('Kodi : ' + error);
-// 			});
-// 		}
-// 		else
-// 		{
-// 			console.log('Smart Plug : switch on');
-// 			if (canPlayMusic)
-// 			{
-// 				let d = new Date(),
-// 					n = new Date(),
-// 					musics = musicMorning
-// 					;
+	plug.getPowerState()
+	.then((state) =>
+	{
+		plug.setPowerState(!state);
+		if(state)
+		{
+			console.log('Smart Plug : switch off');
+			stopMusic()
+			.then(function()
+			{
+				console.log('Kodi : Stop all players');
+			})
+			.catch(function(error)
+			{
+				console.error('Kodi : ' + error);
+			});
+		}
+		else
+		{
+			console.log('Smart Plug : switch on');
+			if (canPlayMusic)
+			{
+				let d = new Date(),
+					n = new Date(),
+					musics = musicMorning
+					;
 
-// 				d.setHours(12, 0, 0, 0);
-// 				(n>d) && (musics = musicEvening);
+				d.setHours(12, 0, 0, 0);
+				(n>d) && (musics = musicEvening);
 
-// 				playMusic(musics[Math.floor(Math.random() * (musics.length))])
-// 				.then(function()
-// 				{
-// 					console.log('Kodi : Playing Music ' + (n>d ? 'Evening' : 'Morning'));
-// 				})
-// 				.catch(function(error)
-// 				{
-// 					console.error('Kodi : ' + error);
-// 				});
-// 			}
-// 			else
-// 			{
-// 				console.log('Kodi : Not Playing Music');
-// 			}
-// 		}
-// 	})
-// 	.catch(function(error)
-// 	{
-// 		console.error('Smart Plug : ' + error);
-// 	})
-// 	;
-// });
-				
+				playMusic(musics[Math.floor(Math.random() * (musics.length))])
+				.then(function()
+				{
+					console.log('Kodi : Playing Music ' + (n>d ? 'Evening' : 'Morning'));
+				})
+				.catch(function(error)
+				{
+					console.error('Kodi : ' + error);
+				});
+			}
+			else
+			{
+				console.log('Kodi : Not Playing Music');
+			}
+		}
+	})
+	.catch(function(error)
+	{
+		console.error('Smart Plug : ' + error);
+	})
+	;
+});
+
 console.log('Back Home Ready');
 
 passport.use(new LocalStrategy(
@@ -146,8 +147,8 @@ passport.use(new LocalStrategy(
 			userId
 			;
 
-		if (userApp !== username || 
-			passApp !== password
+		if (userApp !== crypto.createHash('sha256').update(username).digest('base64') || 
+			passApp !== crypto.createHash('sha256').update(password).digest('base64')
 		)
 		{
 		  return done(null, false, { message: 'Incorrect username or password' });
@@ -219,6 +220,8 @@ app
 		canPlayMusic = req.body.enable;
 	}
 
+	fs.writeFileSync(appConfFile, JSON.stringify(appConf));
+
 	res.end();
 })
 .get('/play', function(req, res)
@@ -240,8 +243,8 @@ app
 })
 ;
 
-//var httpsServer = https.createServer(httpsOptions, app);
-app.listen(port, function()
+var httpsServer = https.createServer(httpsOptions, app);
+httpsServer.listen(port, function()
 {
 	console.log(`Server listening ${port}`);
 });
