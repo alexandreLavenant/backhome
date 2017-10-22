@@ -9,7 +9,7 @@
     "build": "webpack --config webpack.config.prod.js"
   },
   "author": "Alexandre Lavenant",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.17.1",
     "config": "^1.25.1",
