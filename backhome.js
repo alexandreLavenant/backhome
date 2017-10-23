@@ -24,9 +24,9 @@ let config = require('config'),
 	dash_button = require('node-dash-button'),
 	dash = dash_button(config.get('dash.mac'), null, null, 'all'),
 	// Plug Setup
-	plugApi = require('hs100-api'),
+	plugApi = require('tplink-smarthome-api'),
 	plugClient = new plugApi.Client(),
-	plug = plugClient.getPlug(config.get('switch.host')),
+	plug = plugClient.getPlug({ host : config.get('switch.host') }),
 	// Kodi Setup
 	kodi = require('kodi-ws'),
 	kodiConf = config.get('kodi'),
