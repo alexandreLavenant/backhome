@@ -1,0 +1,64 @@
+include ./head.pug
+
+main
+	.container
+		.row
+			.col.s12.m12.l12.xl12
+				form(action="/saveMusic" method="post")
+					.row
+						.col.s12
+							h2 Activate Music
+							.switch
+								label
+									| Off
+									input(type="checkbox" name="enable" checked=enable)
+									span.lever
+									| On
+
+					.row
+						.col.s12
+							h2 Which Music ?
+							h3 Morning
+							each music in musicMorning
+								.row
+									.input-field.col.s8
+										input(class="icon_prefix" type="text" name="musicMorning[]" value=music)
+										label Youtube ID
+									.col.s2
+										a(class="btn-floating waves-effect waves-light red removeMusic" style="margin-right : 5px;")
+											i(class="material-icons") delete
+										a(class="btn-floating waves-effect waves-light green playNow")
+											i(class="material-icons") play_arrow
+							
+							.row
+								.col.s1.offset-s8
+									a(class="btn-floating btn-large blue addMusic" type="button")
+										i(data-add="musicMorning" class="material-icons") add
+					
+					.row
+						.col.s12
+							h3 Evening
+							each music in musicEvening
+								.row
+									.input-field.col.s8
+										input(class="icon_prefix" type="text" name="musicEvening[]" value=music)
+										label Youtube ID
+									.col.s2
+										a(class="btn-floating waves-effect waves-light red removeMusic" style="margin-right : 5px;")
+											i(class="material-icons") delete
+										a(class="btn-floating waves-effect waves-light green playNow")
+											i(class="material-icons") play_arrow
+							
+							.row
+								.col.s1.offset-s8
+									a(class="btn-floating btn-large blue addMusic" type="button")
+										i(data-add="musicEvening"  class="material-icons") add
+					
+					.row
+						.col.s4.offset-s8
+							a(id="saveMusic" class="btn waves-effect waves-light" style="margin-top : 40px;")
+								i(class="material-icons right") send
+								| save
+
+include ./footer.pug
+script(src="/static/js/app.js")

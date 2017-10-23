@@ -1,0 +1,36 @@
+doctype html
+html(lan="eng")
+	head
+		meta(charset="utf-8")
+		meta(name="viewport" content="width=device-width, user-scalable=no")
+		meta(name="theme-color" content="#212529")
+		title Back Home - #{active} 
+		link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
+		link(rel="icon" type="image/png" href="/static/favicon.png")
+		link(rel="manifest" href="/static/manifest.json")
+		style(type="text/css").
+			body {
+				display: flex;
+				min-height: 100vh;
+				flex-direction: column;
+			}
+		
+			main {
+				flex: 1 0 auto;
+			}
+	body
+		nav(class="deep-purple darken-1")
+			.nav-wrapper
+				a(href="/" class="brand-logo")
+					i(class="material-icons") home
+				a(href="#" data-activates="mobile" class="button-collapse")
+					i(class="material-icons") menu
+				ul(class="right hide-on-med-and-down")
+					li
+						a(href="/")
+							i(class="material-icons") build
+				ul(class="side-nav" id="mobile")
+					li
+						a(href="/")
+							i(class="material-icons") build
+							| Configuration
