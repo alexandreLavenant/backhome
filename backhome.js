@@ -31,7 +31,7 @@ let config		= require('config'),
 	// Light Setup
 	LifxClient	= require('node-lifx').Client,
 	lifx		= new LifxClient(),
-	lifxIp 		= config.get('light.ip')
+	lifxIp 		= config.get('light.ip'),
 	playMusic	= function(musicId)
 	{
 		let youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i;
