@@ -1,39 +1,38 @@
 'use strict';
 
-let config = require('config'),
-	path = require('path'),
-	fs = require('fs'),
+let config		= require('config'),
+	path		= require('path'),
+	fs			= require('fs'),
 	// Http server
-	express = require('express'),
-	bodyParser = require('body-parser'),
-	app = express(),
-	port = config.get('server.port'),
+	express		= require('express'),
+	bodyParser	= require('body-parser'),
+	app			= express(),
+	port		= config.get('server.port'),
 	// Security
-	https = require('https'),
-	httpsOptions = {
-		key: fs.readFileSync('./config/ssl/backhome_privkey.pem'),
-		cert: fs.readFileSync('./config/ssl/backhome_certificate.pem')
-	},
-	helmet = require('helmet'),
+	helmet		= require('helmet'),
 	// Authentification Require
-	crypto = require('crypto'),
-	passport = require('passport'),
+	crypto		= require('crypto'),
+	passport	= require('passport'),
 	LocalStrategy = require('passport-local').Strategy,
 	cookieSession = require('cookie-session'),
 	// Dash button Setup
 	dash_button = require('node-dash-button'),
-	dash = dash_button(config.get('dash.mac'), null, null, 'all'),
+	dash		= dash_button(config.get('dash.mac'), null, null, 'all'),
 	// Plug Setup
-	plugApi = require('tplink-smarthome-api'),
-	plugClient = new plugApi.Client(),
-	plug = plugClient.getPlug({ host : config.get('switch.host') }),
+	plugApi		= require('tplink-smarthome-api'),
+	plugClient	= new plugApi.Client(),
+	plug		= plugClient.getPlug({ host : config.get('switch.host') }),
 	// Kodi Setup
-	kodi = require('kodi-ws'),
-	kodiConf = config.get('kodi'),
+	kodi		= require('kodi-ws'),
+	kodiConf	= config.get('kodi'),
 	// App Setup
 	appConfFile = './config/app.json',
-	appConf = JSON.parse(fs.readFileSync(appConfFile)),
-	playMusic = function(musicId)
+	appConf		= JSON.parse(fs.readFileSync(appConfFile)),
+	// Light Setup
+	LifxClient	= require('node-lifx').Client,
+	lifx		= new LifxClient(),
+	lifxIp 		= config.get('light.ip')
+	playMusic	= function(musicId)
 	{
 		let youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i;
 
@@ -74,7 +73,10 @@ let config = require('config'),
 	;
 
 // Main application
-
+// Setup Light
+lifx.init({
+	lights : [lifxIp]
+}); 
 // Dash Button
 dash.on("detected", () =>
 {
@@ -87,6 +89,7 @@ dash.on("detected", () =>
 		if(state)
 		{
 			console.log('Smart Plug : switch off');
+			lifx.light(lifxIp).off();
 			stopMusic()
 			.then(function()
 			{
@@ -240,8 +243,7 @@ app
 })
 ;
 
-var httpsServer = https.createServer(httpsOptions, app);
-httpsServer.listen(port, function()
+app.listen(port, function()
 {
 	console.log(`Server listening ${port}`);
 });
