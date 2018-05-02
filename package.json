@@ -20,7 +20,7 @@
     "kodi-ws": "^2.4.3",
     "materialize-css": "^0.100.2",
     "node-dash-button": "^0.6.1",
-    "node-lifx": "^0.8.0",
+    "node-lifx": "https://github.com/MariusRumpf/node-lifx",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "pug": "^2.0.0-rc.4",
